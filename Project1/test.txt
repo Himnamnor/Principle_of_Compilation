@@ -1,0 +1,16 @@
+0
+0237
+0xff32
+078
+0xgg
+3.14
+114.514e3
+2713.0e-3
+int main(){
+    int a[],b[];
+    0main.Struct;
+}
+// I'm shabi
+/*
+    You are shabi, too.
+*/
