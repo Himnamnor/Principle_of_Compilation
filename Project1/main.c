@@ -1,7 +1,11 @@
 #include<stdio.h>
 #include"lexical.h"
 #include<string.h>
+#include"syntax.tab.h"
 
+extern int yylineno;
+extern int yycolumn;
+extern int yydebug;
 
 int main(int argc, char** argv){
     if(argc>1){
@@ -10,7 +14,8 @@ int main(int argc, char** argv){
             return 1;
         }
     }
-    while(yylex()!=0)
-        ;
+    yyrestart(yyin);
+    yydebug = 0;
+    yyparse();
     return 0;
 }
