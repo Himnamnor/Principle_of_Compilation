@@ -20,39 +20,175 @@ int yycolumn=1;
 
 %token <type_int> INT
 %token <type_float> FLOAT
-
+%token ID
 %token SEMI COMMA ASSIGNOP RELOP PLUS MINUS STAR DIV AND OR DOT NOT TYPE LP RP LB RB LC RC STRUCT RETURN IF ELSE WHILE
 
-%left ADD SUB
-%left MUL DIV
-%right NEG
+%right ASSIGNOP
+%left OR
+%left AND
+%left RELOP
+%left PLUS MINUS
+%left STAR DIV
+%right NOT UMINUS 
+%left DOT LB RB LP RP
 
-%type <type_double> Exp Factor Term
+
 
 %%
 
-Calc:
-    |Calc Exp SEMI{printf("=%lf\n", $2);}
+
+Program: ExtDefList;
+
+ExtDefList:
+    | ExtDef ExtDefList
+    ;
+
+ExtDef: 
+    Specifier FunDec CompSt
+    | Specifier SEMI
+    | Specifier DecList SEMI
+    ;
+
+ExtDecList:
+    VarDec
+    | VarDec COMMA ExtDecList
+    ;
+
+
+
+Specifier:
+    TYPE
+    | StructSpecifier
+    ;
+
+StructSpecifier:
+    STRUCT Tag
+    | STRUCT OptTag LC DefList RC
+    ;
+
+OptTag:
+    | ID
+    ;
+
+Tag:
+    ID
+    ;
+
+
+VarDec:
+    ID
+    | VarDec LB INT RB
+    ;
+
+FunDec:
+    ID LP RP
+    | ID LP VarList RP
+
+VarList:
+    ParamDec COMMA VarList
+    | ParamDec
+    ;
+
+ParamDec:
+    Specifier VarDec
+    ;
+
+
+CompSt:
+    LC DefList StmtList RC
+    ;
+
+StmtList:
+    | Stmt StmtList
+    ;
+
+Stmt:
+    Exp SEMI
+    | CompSt
+    | RETURN Exp SEMI
+    | IF LP Exp RP Stmt
+    | IF LP Exp RP ELSE Stmt
+    | WHILE LP Exp RP Stmt
+    ;
+
+
+DefList:
+    | Def DefList
+    ;
+
+Def:
+    Specifier DecList SEMI
+    ;
+
+DecList:
+    Dec
+    | Dec COMMA DecList
+    ;
+
+Dec:
+    VarDec
+    | VarDec ASSIGNOP AssignmentExp
+    ;
+
+
+PrimaryExp:
+    ID
+    | INT
+    | FLOAT
+    | LP Exp RP
+    ;
+
+PostfixExp:
+    PrimaryExp
+    | PostfixExp LB Exp RB
+    | PostfixExp LP RP
+    | PostfixExp LP Exp RP
+    | PostfixExp DOT ID
+    ;
+
+UnaryExp:
+    PostfixExp
+    | MINUS UnaryExp %prec UMINUS
+    | NOT UnaryExp
+    ;
+
+MultiplicativeExp:
+    UnaryExp
+    | MultiplicativeExp STAR UnaryExp
+    | MultiplicativeExp DIV UnaryExp
+    ;
+
+AdditiveExp:
+    MultiplicativeExp
+    | AdditiveExp PLUS MultiplicativeExp
+    | AdditiveExp MINUS MultiplicativeExp
+    ;
+
+RelationalExp:
+    AdditiveExp
+    | RelationalExp RELOP AdditiveExp
+    ;
+
+LogicalAndExp:
+    RelationalExp
+    | LogicalAndExp AND RelationalExp
+    ;
+
+LogicalOrExp:
+    LogicalAndExp
+    | LogicalOrExp OR LogicalAndExp
+    ;
+
+AssignmentExp:
+    LogicalOrExp
+    | LogicalOrExp ASSIGNOP AssignmentExp
     ;
 
 Exp:
-    Exp ADD Factor   { $$ = $1 + $3; }
-    | Exp SUB Factor   { $$ = $1 - $3; }
-    | SUB Exp %prec NEG { $$ = -$2; }  
-    | Factor
+    AssignmentExp
+    | Exp COMMA AssignmentExp
     ;
 
-Factor:
-    Factor MUL Term { $$ = $1 * $3; }
-    | Factor DIV Term { $$ = $1 / $3; }
-    | Term
-    ;
-
-Term:
-    LP Exp RP     { $$ = $2; }
-    |INT            { $$ = (double)$1; }
-    |FLOAT         { $$=(double)$1;}
-    ;
 
 %%
 void yyerror(const char* s){

@@ -1,0 +1,1563 @@
+Nonterminals useless in grammar
+
+    ExtDecList
+
+
+Rules useless in grammar
+
+   65 ExtDecList: VarDec
+   66           | VarDec COMMA ExtDecList
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: ExtDefList
+
+    2 ExtDefList: ε
+    3           | ExtDef ExtDefList
+
+    4 ExtDef: Specifier FunDec CompSt
+    5       | Specifier SEMI
+    6       | Specifier DecList SEMI
+
+    7 Specifier: TYPE
+    8          | StructSpecifier
+
+    9 StructSpecifier: STRUCT Tag
+   10                | STRUCT OptTag LC DefList RC
+
+   11 OptTag: ε
+   12       | ID
+
+   13 Tag: ID
+
+   14 VarDec: ID
+   15       | VarDec LB INT RB
+
+   16 FunDec: ID LP RP
+   17       | ID LP VarList RP
+
+   18 VarList: ParamDec COMMA VarList
+   19        | ParamDec
+
+   20 ParamDec: Specifier VarDec
+
+   21 CompSt: LC DefList StmtList RC
+
+   22 StmtList: ε
+   23         | Stmt StmtList
+
+   24 Stmt: Exp SEMI
+   25     | CompSt
+   26     | RETURN Exp SEMI
+   27     | IF LP Exp RP Stmt
+   28     | IF LP Exp RP ELSE Stmt
+   29     | WHILE LP Exp RP Stmt
+
+   30 DefList: ε
+   31        | Def DefList
+
+   32 Def: Specifier DecList SEMI
+
+   33 DecList: Dec
+   34        | Dec COMMA DecList
+
+   35 Dec: VarDec
+   36    | VarDec ASSIGNOP AssignmentExp
+
+   37 PrimaryExp: ID
+   38           | INT
+   39           | FLOAT
+   40           | LP Exp RP
+
+   41 PostfixExp: PrimaryExp
+   42           | PostfixExp LB Exp RB
+   43           | PostfixExp LP RP
+   44           | PostfixExp LP Exp RP
+   45           | PostfixExp DOT ID
+
+   46 UnaryExp: PostfixExp
+   47         | MINUS UnaryExp
+   48         | NOT UnaryExp
+
+   49 MultiplicativeExp: UnaryExp
+   50                  | MultiplicativeExp STAR UnaryExp
+   51                  | MultiplicativeExp DIV UnaryExp
+
+   52 AdditiveExp: MultiplicativeExp
+   53            | AdditiveExp PLUS MultiplicativeExp
+   54            | AdditiveExp MINUS MultiplicativeExp
+
+   55 RelationalExp: AdditiveExp
+   56              | RelationalExp RELOP AdditiveExp
+
+   57 LogicalAndExp: RelationalExp
+   58              | LogicalAndExp AND RelationalExp
+
+   59 LogicalOrExp: LogicalAndExp
+   60             | LogicalOrExp OR LogicalAndExp
+
+   61 AssignmentExp: LogicalOrExp
+   62              | LogicalOrExp ASSIGNOP AssignmentExp
+
+   63 Exp: AssignmentExp
+   64    | Exp COMMA AssignmentExp
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    INT <type_int> (258) 15 38
+    FLOAT <type_float> (259) 39
+    ID (260) 12 13 14 16 17 37 45
+    SEMI (261) 5 6 24 26 32
+    COMMA (262) 18 34 64
+    ASSIGNOP (263) 36 62
+    RELOP (264) 56
+    PLUS (265) 53
+    MINUS (266) 47 54
+    STAR (267) 50
+    DIV (268) 51
+    AND (269) 58
+    OR (270) 60
+    DOT (271) 45
+    NOT (272) 48
+    TYPE (273) 7
+    LP (274) 16 17 27 28 29 40 43 44
+    RP (275) 16 17 27 28 29 40 43 44
+    LB (276) 15 42
+    RB (277) 15 42
+    LC (278) 10 21
+    RC (279) 10 21
+    STRUCT (280) 9 10
+    RETURN (281) 26
+    IF (282) 27 28
+    ELSE (283) 28
+    WHILE (284) 29
+    UMINUS (285)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (31)
+        on left: 0
+    Program (32)
+        on left: 1
+        on right: 0
+    ExtDefList (33)
+        on left: 2 3
+        on right: 1 3
+    ExtDef (34)
+        on left: 4 5 6
+        on right: 3
+    Specifier (35)
+        on left: 7 8
+        on right: 4 5 6 20 32
+    StructSpecifier (36)
+        on left: 9 10
+        on right: 8
+    OptTag (37)
+        on left: 11 12
+        on right: 10
+    Tag (38)
+        on left: 13
+        on right: 9
+    VarDec (39)
+        on left: 14 15
+        on right: 15 20 35 36
+    FunDec (40)
+        on left: 16 17
+        on right: 4
+    VarList (41)
+        on left: 18 19
+        on right: 17 18
+    ParamDec (42)
+        on left: 20
+        on right: 18 19
+    CompSt (43)
+        on left: 21
+        on right: 4 25
+    StmtList (44)
+        on left: 22 23
+        on right: 21 23
+    Stmt (45)
+        on left: 24 25 26 27 28 29
+        on right: 23 27 28 29
+    DefList (46)
+        on left: 30 31
+        on right: 10 21 31
+    Def (47)
+        on left: 32
+        on right: 31
+    DecList (48)
+        on left: 33 34
+        on right: 6 32 34
+    Dec (49)
+        on left: 35 36
+        on right: 33 34
+    PrimaryExp (50)
+        on left: 37 38 39 40
+        on right: 41
+    PostfixExp (51)
+        on left: 41 42 43 44 45
+        on right: 42 43 44 45 46
+    UnaryExp (52)
+        on left: 46 47 48
+        on right: 47 48 49 50 51
+    MultiplicativeExp (53)
+        on left: 49 50 51
+        on right: 50 51 52 53 54
+    AdditiveExp (54)
+        on left: 52 53 54
+        on right: 53 54 55 56
+    RelationalExp (55)
+        on left: 55 56
+        on right: 56 57 58
+    LogicalAndExp (56)
+        on left: 57 58
+        on right: 58 59 60
+    LogicalOrExp (57)
+        on left: 59 60
+        on right: 60 61 62
+    AssignmentExp (58)
+        on left: 61 62
+        on right: 36 62 63 64
+    Exp (59)
+        on left: 63 64
+        on right: 24 26 27 28 29 40 42 44 64
+
+
+State 0
+
+    0 $accept: • Program $end
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 2 (ExtDefList)
+
+    Program          go to state 3
+    ExtDefList       go to state 4
+    ExtDef           go to state 5
+    Specifier        go to state 6
+    StructSpecifier  go to state 7
+
+
+State 1
+
+    7 Specifier: TYPE •
+
+    $default  reduce using rule 7 (Specifier)
+
+
+State 2
+
+    9 StructSpecifier: STRUCT • Tag
+   10                | STRUCT • OptTag LC DefList RC
+
+    ID  shift, and go to state 8
+
+    $default  reduce using rule 11 (OptTag)
+
+    OptTag  go to state 9
+    Tag     go to state 10
+
+
+State 3
+
+    0 $accept: Program • $end
+
+    $end  shift, and go to state 11
+
+
+State 4
+
+    1 Program: ExtDefList •
+
+    $default  reduce using rule 1 (Program)
+
+
+State 5
+
+    3 ExtDefList: ExtDef • ExtDefList
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 2 (ExtDefList)
+
+    ExtDefList       go to state 12
+    ExtDef           go to state 5
+    Specifier        go to state 6
+    StructSpecifier  go to state 7
+
+
+State 6
+
+    4 ExtDef: Specifier • FunDec CompSt
+    5       | Specifier • SEMI
+    6       | Specifier • DecList SEMI
+
+    ID    shift, and go to state 13
+    SEMI  shift, and go to state 14
+
+    VarDec   go to state 15
+    FunDec   go to state 16
+    DecList  go to state 17
+    Dec      go to state 18
+
+
+State 7
+
+    8 Specifier: StructSpecifier •
+
+    $default  reduce using rule 8 (Specifier)
+
+
+State 8
+
+   12 OptTag: ID •
+   13 Tag: ID •
+
+    LC        reduce using rule 12 (OptTag)
+    $default  reduce using rule 13 (Tag)
+
+
+State 9
+
+   10 StructSpecifier: STRUCT OptTag • LC DefList RC
+
+    LC  shift, and go to state 19
+
+
+State 10
+
+    9 StructSpecifier: STRUCT Tag •
+
+    $default  reduce using rule 9 (StructSpecifier)
+
+
+State 11
+
+    0 $accept: Program $end •
+
+    $default  accept
+
+
+State 12
+
+    3 ExtDefList: ExtDef ExtDefList •
+
+    $default  reduce using rule 3 (ExtDefList)
+
+
+State 13
+
+   14 VarDec: ID •
+   16 FunDec: ID • LP RP
+   17       | ID • LP VarList RP
+
+    LP  shift, and go to state 20
+
+    $default  reduce using rule 14 (VarDec)
+
+
+State 14
+
+    5 ExtDef: Specifier SEMI •
+
+    $default  reduce using rule 5 (ExtDef)
+
+
+State 15
+
+   15 VarDec: VarDec • LB INT RB
+   35 Dec: VarDec •
+   36    | VarDec • ASSIGNOP AssignmentExp
+
+    ASSIGNOP  shift, and go to state 21
+    LB        shift, and go to state 22
+
+    $default  reduce using rule 35 (Dec)
+
+
+State 16
+
+    4 ExtDef: Specifier FunDec • CompSt
+
+    LC  shift, and go to state 23
+
+    CompSt  go to state 24
+
+
+State 17
+
+    6 ExtDef: Specifier DecList • SEMI
+
+    SEMI  shift, and go to state 25
+
+
+State 18
+
+   33 DecList: Dec •
+   34        | Dec • COMMA DecList
+
+    COMMA  shift, and go to state 26
+
+    $default  reduce using rule 33 (DecList)
+
+
+State 19
+
+   10 StructSpecifier: STRUCT OptTag LC • DefList RC
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 30 (DefList)
+
+    Specifier        go to state 27
+    StructSpecifier  go to state 7
+    DefList          go to state 28
+    Def              go to state 29
+
+
+State 20
+
+   16 FunDec: ID LP • RP
+   17       | ID LP • VarList RP
+
+    TYPE    shift, and go to state 1
+    RP      shift, and go to state 30
+    STRUCT  shift, and go to state 2
+
+    Specifier        go to state 31
+    StructSpecifier  go to state 7
+    VarList          go to state 32
+    ParamDec         go to state 33
+
+
+State 21
+
+   36 Dec: VarDec ASSIGNOP • AssignmentExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 48
+
+
+State 22
+
+   15 VarDec: VarDec LB • INT RB
+
+    INT  shift, and go to state 49
+
+
+State 23
+
+   21 CompSt: LC • DefList StmtList RC
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 30 (DefList)
+
+    Specifier        go to state 27
+    StructSpecifier  go to state 7
+    DefList          go to state 50
+    Def              go to state 29
+
+
+State 24
+
+    4 ExtDef: Specifier FunDec CompSt •
+
+    $default  reduce using rule 4 (ExtDef)
+
+
+State 25
+
+    6 ExtDef: Specifier DecList SEMI •
+
+    $default  reduce using rule 6 (ExtDef)
+
+
+State 26
+
+   34 DecList: Dec COMMA • DecList
+
+    ID  shift, and go to state 51
+
+    VarDec   go to state 15
+    DecList  go to state 52
+    Dec      go to state 18
+
+
+State 27
+
+   32 Def: Specifier • DecList SEMI
+
+    ID  shift, and go to state 51
+
+    VarDec   go to state 15
+    DecList  go to state 53
+    Dec      go to state 18
+
+
+State 28
+
+   10 StructSpecifier: STRUCT OptTag LC DefList • RC
+
+    RC  shift, and go to state 54
+
+
+State 29
+
+   31 DefList: Def • DefList
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 30 (DefList)
+
+    Specifier        go to state 27
+    StructSpecifier  go to state 7
+    DefList          go to state 55
+    Def              go to state 29
+
+
+State 30
+
+   16 FunDec: ID LP RP •
+
+    $default  reduce using rule 16 (FunDec)
+
+
+State 31
+
+   20 ParamDec: Specifier • VarDec
+
+    ID  shift, and go to state 51
+
+    VarDec  go to state 56
+
+
+State 32
+
+   17 FunDec: ID LP VarList • RP
+
+    RP  shift, and go to state 57
+
+
+State 33
+
+   18 VarList: ParamDec • COMMA VarList
+   19        | ParamDec •
+
+    COMMA  shift, and go to state 58
+
+    $default  reduce using rule 19 (VarList)
+
+
+State 34
+
+   38 PrimaryExp: INT •
+
+    $default  reduce using rule 38 (PrimaryExp)
+
+
+State 35
+
+   39 PrimaryExp: FLOAT •
+
+    $default  reduce using rule 39 (PrimaryExp)
+
+
+State 36
+
+   37 PrimaryExp: ID •
+
+    $default  reduce using rule 37 (PrimaryExp)
+
+
+State 37
+
+   47 UnaryExp: MINUS • UnaryExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp  go to state 40
+    PostfixExp  go to state 41
+    UnaryExp    go to state 59
+
+
+State 38
+
+   48 UnaryExp: NOT • UnaryExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp  go to state 40
+    PostfixExp  go to state 41
+    UnaryExp    go to state 60
+
+
+State 39
+
+   40 PrimaryExp: LP • Exp RP
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 62
+
+
+State 40
+
+   41 PostfixExp: PrimaryExp •
+
+    $default  reduce using rule 41 (PostfixExp)
+
+
+State 41
+
+   42 PostfixExp: PostfixExp • LB Exp RB
+   43           | PostfixExp • LP RP
+   44           | PostfixExp • LP Exp RP
+   45           | PostfixExp • DOT ID
+   46 UnaryExp: PostfixExp •
+
+    DOT  shift, and go to state 63
+    LP   shift, and go to state 64
+    LB   shift, and go to state 65
+
+    $default  reduce using rule 46 (UnaryExp)
+
+
+State 42
+
+   49 MultiplicativeExp: UnaryExp •
+
+    $default  reduce using rule 49 (MultiplicativeExp)
+
+
+State 43
+
+   50 MultiplicativeExp: MultiplicativeExp • STAR UnaryExp
+   51                  | MultiplicativeExp • DIV UnaryExp
+   52 AdditiveExp: MultiplicativeExp •
+
+    STAR  shift, and go to state 66
+    DIV   shift, and go to state 67
+
+    $default  reduce using rule 52 (AdditiveExp)
+
+
+State 44
+
+   53 AdditiveExp: AdditiveExp • PLUS MultiplicativeExp
+   54            | AdditiveExp • MINUS MultiplicativeExp
+   55 RelationalExp: AdditiveExp •
+
+    PLUS   shift, and go to state 68
+    MINUS  shift, and go to state 69
+
+    $default  reduce using rule 55 (RelationalExp)
+
+
+State 45
+
+   56 RelationalExp: RelationalExp • RELOP AdditiveExp
+   57 LogicalAndExp: RelationalExp •
+
+    RELOP  shift, and go to state 70
+
+    $default  reduce using rule 57 (LogicalAndExp)
+
+
+State 46
+
+   58 LogicalAndExp: LogicalAndExp • AND RelationalExp
+   59 LogicalOrExp: LogicalAndExp •
+
+    AND  shift, and go to state 71
+
+    $default  reduce using rule 59 (LogicalOrExp)
+
+
+State 47
+
+   60 LogicalOrExp: LogicalOrExp • OR LogicalAndExp
+   61 AssignmentExp: LogicalOrExp •
+   62              | LogicalOrExp • ASSIGNOP AssignmentExp
+
+    ASSIGNOP  shift, and go to state 72
+    OR        shift, and go to state 73
+
+    $default  reduce using rule 61 (AssignmentExp)
+
+
+State 48
+
+   36 Dec: VarDec ASSIGNOP AssignmentExp •
+
+    $default  reduce using rule 36 (Dec)
+
+
+State 49
+
+   15 VarDec: VarDec LB INT • RB
+
+    RB  shift, and go to state 74
+
+
+State 50
+
+   21 CompSt: LC DefList • StmtList RC
+
+    INT     shift, and go to state 34
+    FLOAT   shift, and go to state 35
+    ID      shift, and go to state 36
+    MINUS   shift, and go to state 37
+    NOT     shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 23
+    RETURN  shift, and go to state 75
+    IF      shift, and go to state 76
+    WHILE   shift, and go to state 77
+
+    $default  reduce using rule 22 (StmtList)
+
+    CompSt             go to state 78
+    StmtList           go to state 79
+    Stmt               go to state 80
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 81
+
+
+State 51
+
+   14 VarDec: ID •
+
+    $default  reduce using rule 14 (VarDec)
+
+
+State 52
+
+   34 DecList: Dec COMMA DecList •
+
+    $default  reduce using rule 34 (DecList)
+
+
+State 53
+
+   32 Def: Specifier DecList • SEMI
+
+    SEMI  shift, and go to state 82
+
+
+State 54
+
+   10 StructSpecifier: STRUCT OptTag LC DefList RC •
+
+    $default  reduce using rule 10 (StructSpecifier)
+
+
+State 55
+
+   31 DefList: Def DefList •
+
+    $default  reduce using rule 31 (DefList)
+
+
+State 56
+
+   15 VarDec: VarDec • LB INT RB
+   20 ParamDec: Specifier VarDec •
+
+    LB  shift, and go to state 22
+
+    $default  reduce using rule 20 (ParamDec)
+
+
+State 57
+
+   17 FunDec: ID LP VarList RP •
+
+    $default  reduce using rule 17 (FunDec)
+
+
+State 58
+
+   18 VarList: ParamDec COMMA • VarList
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    Specifier        go to state 31
+    StructSpecifier  go to state 7
+    VarList          go to state 83
+    ParamDec         go to state 33
+
+
+State 59
+
+   47 UnaryExp: MINUS UnaryExp •
+
+    $default  reduce using rule 47 (UnaryExp)
+
+
+State 60
+
+   48 UnaryExp: NOT UnaryExp •
+
+    $default  reduce using rule 48 (UnaryExp)
+
+
+State 61
+
+   63 Exp: AssignmentExp •
+
+    $default  reduce using rule 63 (Exp)
+
+
+State 62
+
+   40 PrimaryExp: LP Exp • RP
+   64 Exp: Exp • COMMA AssignmentExp
+
+    COMMA  shift, and go to state 84
+    RP     shift, and go to state 85
+
+
+State 63
+
+   45 PostfixExp: PostfixExp DOT • ID
+
+    ID  shift, and go to state 86
+
+
+State 64
+
+   43 PostfixExp: PostfixExp LP • RP
+   44           | PostfixExp LP • Exp RP
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+    RP     shift, and go to state 87
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 88
+
+
+State 65
+
+   42 PostfixExp: PostfixExp LB • Exp RB
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 89
+
+
+State 66
+
+   50 MultiplicativeExp: MultiplicativeExp STAR • UnaryExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp  go to state 40
+    PostfixExp  go to state 41
+    UnaryExp    go to state 90
+
+
+State 67
+
+   51 MultiplicativeExp: MultiplicativeExp DIV • UnaryExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp  go to state 40
+    PostfixExp  go to state 41
+    UnaryExp    go to state 91
+
+
+State 68
+
+   53 AdditiveExp: AdditiveExp PLUS • MultiplicativeExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 92
+
+
+State 69
+
+   54 AdditiveExp: AdditiveExp MINUS • MultiplicativeExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 93
+
+
+State 70
+
+   56 RelationalExp: RelationalExp RELOP • AdditiveExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 94
+
+
+State 71
+
+   58 LogicalAndExp: LogicalAndExp AND • RelationalExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 95
+
+
+State 72
+
+   62 AssignmentExp: LogicalOrExp ASSIGNOP • AssignmentExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 96
+
+
+State 73
+
+   60 LogicalOrExp: LogicalOrExp OR • LogicalAndExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 97
+
+
+State 74
+
+   15 VarDec: VarDec LB INT RB •
+
+    $default  reduce using rule 15 (VarDec)
+
+
+State 75
+
+   26 Stmt: RETURN • Exp SEMI
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 98
+
+
+State 76
+
+   27 Stmt: IF • LP Exp RP Stmt
+   28     | IF • LP Exp RP ELSE Stmt
+
+    LP  shift, and go to state 99
+
+
+State 77
+
+   29 Stmt: WHILE • LP Exp RP Stmt
+
+    LP  shift, and go to state 100
+
+
+State 78
+
+   25 Stmt: CompSt •
+
+    $default  reduce using rule 25 (Stmt)
+
+
+State 79
+
+   21 CompSt: LC DefList StmtList • RC
+
+    RC  shift, and go to state 101
+
+
+State 80
+
+   23 StmtList: Stmt • StmtList
+
+    INT     shift, and go to state 34
+    FLOAT   shift, and go to state 35
+    ID      shift, and go to state 36
+    MINUS   shift, and go to state 37
+    NOT     shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 23
+    RETURN  shift, and go to state 75
+    IF      shift, and go to state 76
+    WHILE   shift, and go to state 77
+
+    $default  reduce using rule 22 (StmtList)
+
+    CompSt             go to state 78
+    StmtList           go to state 102
+    Stmt               go to state 80
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 81
+
+
+State 81
+
+   24 Stmt: Exp • SEMI
+   64 Exp: Exp • COMMA AssignmentExp
+
+    SEMI   shift, and go to state 103
+    COMMA  shift, and go to state 84
+
+
+State 82
+
+   32 Def: Specifier DecList SEMI •
+
+    $default  reduce using rule 32 (Def)
+
+
+State 83
+
+   18 VarList: ParamDec COMMA VarList •
+
+    $default  reduce using rule 18 (VarList)
+
+
+State 84
+
+   64 Exp: Exp COMMA • AssignmentExp
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 104
+
+
+State 85
+
+   40 PrimaryExp: LP Exp RP •
+
+    $default  reduce using rule 40 (PrimaryExp)
+
+
+State 86
+
+   45 PostfixExp: PostfixExp DOT ID •
+
+    $default  reduce using rule 45 (PostfixExp)
+
+
+State 87
+
+   43 PostfixExp: PostfixExp LP RP •
+
+    $default  reduce using rule 43 (PostfixExp)
+
+
+State 88
+
+   44 PostfixExp: PostfixExp LP Exp • RP
+   64 Exp: Exp • COMMA AssignmentExp
+
+    COMMA  shift, and go to state 84
+    RP     shift, and go to state 105
+
+
+State 89
+
+   42 PostfixExp: PostfixExp LB Exp • RB
+   64 Exp: Exp • COMMA AssignmentExp
+
+    COMMA  shift, and go to state 84
+    RB     shift, and go to state 106
+
+
+State 90
+
+   50 MultiplicativeExp: MultiplicativeExp STAR UnaryExp •
+
+    $default  reduce using rule 50 (MultiplicativeExp)
+
+
+State 91
+
+   51 MultiplicativeExp: MultiplicativeExp DIV UnaryExp •
+
+    $default  reduce using rule 51 (MultiplicativeExp)
+
+
+State 92
+
+   50 MultiplicativeExp: MultiplicativeExp • STAR UnaryExp
+   51                  | MultiplicativeExp • DIV UnaryExp
+   53 AdditiveExp: AdditiveExp PLUS MultiplicativeExp •
+
+    STAR  shift, and go to state 66
+    DIV   shift, and go to state 67
+
+    $default  reduce using rule 53 (AdditiveExp)
+
+
+State 93
+
+   50 MultiplicativeExp: MultiplicativeExp • STAR UnaryExp
+   51                  | MultiplicativeExp • DIV UnaryExp
+   54 AdditiveExp: AdditiveExp MINUS MultiplicativeExp •
+
+    STAR  shift, and go to state 66
+    DIV   shift, and go to state 67
+
+    $default  reduce using rule 54 (AdditiveExp)
+
+
+State 94
+
+   53 AdditiveExp: AdditiveExp • PLUS MultiplicativeExp
+   54            | AdditiveExp • MINUS MultiplicativeExp
+   56 RelationalExp: RelationalExp RELOP AdditiveExp •
+
+    PLUS   shift, and go to state 68
+    MINUS  shift, and go to state 69
+
+    $default  reduce using rule 56 (RelationalExp)
+
+
+State 95
+
+   56 RelationalExp: RelationalExp • RELOP AdditiveExp
+   58 LogicalAndExp: LogicalAndExp AND RelationalExp •
+
+    RELOP  shift, and go to state 70
+
+    $default  reduce using rule 58 (LogicalAndExp)
+
+
+State 96
+
+   62 AssignmentExp: LogicalOrExp ASSIGNOP AssignmentExp •
+
+    $default  reduce using rule 62 (AssignmentExp)
+
+
+State 97
+
+   58 LogicalAndExp: LogicalAndExp • AND RelationalExp
+   60 LogicalOrExp: LogicalOrExp OR LogicalAndExp •
+
+    AND  shift, and go to state 71
+
+    $default  reduce using rule 60 (LogicalOrExp)
+
+
+State 98
+
+   26 Stmt: RETURN Exp • SEMI
+   64 Exp: Exp • COMMA AssignmentExp
+
+    SEMI   shift, and go to state 107
+    COMMA  shift, and go to state 84
+
+
+State 99
+
+   27 Stmt: IF LP • Exp RP Stmt
+   28     | IF LP • Exp RP ELSE Stmt
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 108
+
+
+State 100
+
+   29 Stmt: WHILE LP • Exp RP Stmt
+
+    INT    shift, and go to state 34
+    FLOAT  shift, and go to state 35
+    ID     shift, and go to state 36
+    MINUS  shift, and go to state 37
+    NOT    shift, and go to state 38
+    LP     shift, and go to state 39
+
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 109
+
+
+State 101
+
+   21 CompSt: LC DefList StmtList RC •
+
+    $default  reduce using rule 21 (CompSt)
+
+
+State 102
+
+   23 StmtList: Stmt StmtList •
+
+    $default  reduce using rule 23 (StmtList)
+
+
+State 103
+
+   24 Stmt: Exp SEMI •
+
+    $default  reduce using rule 24 (Stmt)
+
+
+State 104
+
+   64 Exp: Exp COMMA AssignmentExp •
+
+    $default  reduce using rule 64 (Exp)
+
+
+State 105
+
+   44 PostfixExp: PostfixExp LP Exp RP •
+
+    $default  reduce using rule 44 (PostfixExp)
+
+
+State 106
+
+   42 PostfixExp: PostfixExp LB Exp RB •
+
+    $default  reduce using rule 42 (PostfixExp)
+
+
+State 107
+
+   26 Stmt: RETURN Exp SEMI •
+
+    $default  reduce using rule 26 (Stmt)
+
+
+State 108
+
+   27 Stmt: IF LP Exp • RP Stmt
+   28     | IF LP Exp • RP ELSE Stmt
+   64 Exp: Exp • COMMA AssignmentExp
+
+    COMMA  shift, and go to state 84
+    RP     shift, and go to state 110
+
+
+State 109
+
+   29 Stmt: WHILE LP Exp • RP Stmt
+   64 Exp: Exp • COMMA AssignmentExp
+
+    COMMA  shift, and go to state 84
+    RP     shift, and go to state 111
+
+
+State 110
+
+   27 Stmt: IF LP Exp RP • Stmt
+   28     | IF LP Exp RP • ELSE Stmt
+
+    INT     shift, and go to state 34
+    FLOAT   shift, and go to state 35
+    ID      shift, and go to state 36
+    MINUS   shift, and go to state 37
+    NOT     shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 23
+    RETURN  shift, and go to state 75
+    IF      shift, and go to state 76
+    ELSE    shift, and go to state 112
+    WHILE   shift, and go to state 77
+
+    CompSt             go to state 78
+    Stmt               go to state 113
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 81
+
+
+State 111
+
+   29 Stmt: WHILE LP Exp RP • Stmt
+
+    INT     shift, and go to state 34
+    FLOAT   shift, and go to state 35
+    ID      shift, and go to state 36
+    MINUS   shift, and go to state 37
+    NOT     shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 23
+    RETURN  shift, and go to state 75
+    IF      shift, and go to state 76
+    WHILE   shift, and go to state 77
+
+    CompSt             go to state 78
+    Stmt               go to state 114
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 81
+
+
+State 112
+
+   28 Stmt: IF LP Exp RP ELSE • Stmt
+
+    INT     shift, and go to state 34
+    FLOAT   shift, and go to state 35
+    ID      shift, and go to state 36
+    MINUS   shift, and go to state 37
+    NOT     shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 23
+    RETURN  shift, and go to state 75
+    IF      shift, and go to state 76
+    WHILE   shift, and go to state 77
+
+    CompSt             go to state 78
+    Stmt               go to state 115
+    PrimaryExp         go to state 40
+    PostfixExp         go to state 41
+    UnaryExp           go to state 42
+    MultiplicativeExp  go to state 43
+    AdditiveExp        go to state 44
+    RelationalExp      go to state 45
+    LogicalAndExp      go to state 46
+    LogicalOrExp       go to state 47
+    AssignmentExp      go to state 61
+    Exp                go to state 81
+
+
+State 113
+
+   27 Stmt: IF LP Exp RP Stmt •
+
+    $default  reduce using rule 27 (Stmt)
+
+
+State 114
+
+   29 Stmt: WHILE LP Exp RP Stmt •
+
+    $default  reduce using rule 29 (Stmt)
+
+
+State 115
+
+   28 Stmt: IF LP Exp RP ELSE Stmt •
+
+    $default  reduce using rule 28 (Stmt)

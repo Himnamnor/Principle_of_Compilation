@@ -15,7 +15,7 @@ int main(int argc, char** argv){
         }
     }
     yyrestart(yyin);
-    yydebug = 0;
+    yydebug = 1;
     yyparse();
     return 0;
 }

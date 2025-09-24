@@ -56,34 +56,32 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     INT = 258,                     /* INT  */
     FLOAT = 259,                   /* FLOAT  */
-    SEMI = 260,                    /* SEMI  */
-    COMMA = 261,                   /* COMMA  */
-    ASSIGNOP = 262,                /* ASSIGNOP  */
-    RELOP = 263,                   /* RELOP  */
-    PLUS = 264,                    /* PLUS  */
-    MINUS = 265,                   /* MINUS  */
-    STAR = 266,                    /* STAR  */
-    DIV = 267,                     /* DIV  */
-    AND = 268,                     /* AND  */
-    OR = 269,                      /* OR  */
-    DOT = 270,                     /* DOT  */
-    NOT = 271,                     /* NOT  */
-    TYPE = 272,                    /* TYPE  */
-    LP = 273,                      /* LP  */
-    RP = 274,                      /* RP  */
-    LB = 275,                      /* LB  */
-    RB = 276,                      /* RB  */
-    LC = 277,                      /* LC  */
-    RC = 278,                      /* RC  */
-    STRUCT = 279,                  /* STRUCT  */
-    RETURN = 280,                  /* RETURN  */
-    IF = 281,                      /* IF  */
-    ELSE = 282,                    /* ELSE  */
-    WHILE = 283,                   /* WHILE  */
-    ADD = 284,                     /* ADD  */
-    SUB = 285,                     /* SUB  */
-    MUL = 286,                     /* MUL  */
-    NEG = 287                      /* NEG  */
+    ID = 260,                      /* ID  */
+    SEMI = 261,                    /* SEMI  */
+    COMMA = 262,                   /* COMMA  */
+    ASSIGNOP = 263,                /* ASSIGNOP  */
+    RELOP = 264,                   /* RELOP  */
+    PLUS = 265,                    /* PLUS  */
+    MINUS = 266,                   /* MINUS  */
+    STAR = 267,                    /* STAR  */
+    DIV = 268,                     /* DIV  */
+    AND = 269,                     /* AND  */
+    OR = 270,                      /* OR  */
+    DOT = 271,                     /* DOT  */
+    NOT = 272,                     /* NOT  */
+    TYPE = 273,                    /* TYPE  */
+    LP = 274,                      /* LP  */
+    RP = 275,                      /* RP  */
+    LB = 276,                      /* LB  */
+    RB = 277,                      /* RB  */
+    LC = 278,                      /* LC  */
+    RC = 279,                      /* RC  */
+    STRUCT = 280,                  /* STRUCT  */
+    RETURN = 281,                  /* RETURN  */
+    IF = 282,                      /* IF  */
+    ELSE = 283,                    /* ELSE  */
+    WHILE = 284,                   /* WHILE  */
+    UMINUS = 285                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -98,7 +96,7 @@ union YYSTYPE
     float type_float;
     double type_double;
 
-#line 102 "syntax.tab.h"
+#line 100 "syntax.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

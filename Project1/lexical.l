@@ -3,6 +3,7 @@
 %{
     #include"syntax.tab.h"
     extern int yycolumn;
+    //#define printf(...)
 %}
 
 %x COMMENT
@@ -44,17 +45,22 @@ id              [_a-zA-Z]+[0-9_a-zA-Z]*
 
 ;               {printf("Line %d: a semi\n",yylineno); return SEMI;}
 ,               {printf("Line %d: a coma\n",yylineno); return COMMA;}
-=               {printf("Line %d: a assignop\n",yylineno); return ASSIGNOP;}
->|<|>=|<=|==|!= {printf("Line %d: a relop\n",yylineno); return RELOP;}
-\+              {printf("Line %d: a plus\n",yylineno);return ADD;}
-\-              {printf("Line %d: a minus\n",yylineno);return SUB;}
-\*              {printf("Line %d: a multiply\n",yylineno);return MUL;}
+"=="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
+"!="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
+">="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
+"<="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
+">"               { printf("Line %d: a relop\n",yylineno); return RELOP; }
+"<"               { printf("Line %d: a relop\n",yylineno); return RELOP; }
+"="               { printf("Line %d: a assignop\n",yylineno); return ASSIGNOP; }
+\+              {printf("Line %d: a plus\n",yylineno);return PLUS;}
+\-              {printf("Line %d: a minus\n",yylineno);return MINUS;}
+\*              {printf("Line %d: a multiply\n",yylineno);return STAR;}
 \/              {printf("Line %d: a division\n",yylineno);return DIV;}
 &&              {printf("Line %d: a and\n",yylineno); return AND;}
 \|\|            {printf("Line %d: a or\n",yylineno); return OR;}
 \.              {printf("Line %d: a dot\n",yylineno); return DOT;}
 !               {printf("Line %d: a not\n",yylineno); return NOT;}
-{type}          {printf("Line %d: a type\n",yylineno); } 
+{type}          {printf("Line %d: a type\n",yylineno); return TYPE;} 
 \(              {printf("Line %d: a lp\n",yylineno); return LP;}
 \)              {printf("Line %d: a rp\n",yylineno); return RP;}
 \[              {printf("Line %d: a lb\n",yylineno); return LB;}
@@ -64,13 +70,13 @@ id              [_a-zA-Z]+[0-9_a-zA-Z]*
 
 {reserved}      { printf("Line %d: a reserved word: %s\n",yylineno,yytext); }
 
-{struct}        {printf("Line %d: a struct\n",yylineno);}
-{return}        {printf("Line %d: a return\n",yylineno);}
-{if}            {printf("Line %d: a if\n",yylineno);}
-{else}          {printf("Line %d: a else\n",yylineno);}
-{while}         {printf("Line %d: a while\n",yylineno);}
+{struct}        {printf("Line %d: a struct\n",yylineno); return STRUCT;}
+{return}        {printf("Line %d: a return\n",yylineno); return RETURN;}
+{if}            {printf("Line %d: a if\n",yylineno); return IF;}
+{else}          {printf("Line %d: a else\n",yylineno); return ELSE;}
+{while}         {printf("Line %d: a while\n",yylineno); return WHILE;}
 
-{id}            {printf("Line %d: an identifier: %s\n",yylineno,yytext);}
+{id}            {printf("Line %d: an identifier: %s\n",yylineno,yytext); return ID;}
 [0-9]+[a-zA-Z_][a-zA-Z_]*      {printf("Error type A at Line %d: identifier can't start with digit!\n",yylineno);}
 
 {int}               { 
