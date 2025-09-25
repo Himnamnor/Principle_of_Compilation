@@ -69,9 +69,12 @@
 /* First part of user prologue.  */
 #line 1 "syntax.y"
 
+#include "Tree.h"
 #include <stdio.h>
 #include "lexical.h"
 extern int yylineno;
+extern TreeNode* root;
+extern int has_error;
 void yyerror(const char *s);
 int yycolumn=1;
 #define YY_USER_ACTION \
@@ -80,7 +83,7 @@ int yycolumn=1;
     yylloc.last_column=yycolumn+yyleng-1;           \
     yycolumn+=yyleng;
 
-#line 84 "syntax.tab.c"
+#line 87 "syntax.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -554,15 +557,15 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    40,    40,    42,    43,    47,    48,    49,    60,    61,
-      65,    66,    69,    70,    74,    79,    80,    84,    85,    88,
-      89,    93,    98,   101,   102,   106,   107,   108,   109,   110,
-     111,   115,   116,   120,   124,   125,   129,   130,   135,   136,
-     137,   138,   142,   143,   144,   145,   146,   150,   151,   152,
-     156,   157,   158,   162,   163,   164,   168,   169,   173,   174,
-     178,   179,   183,   184,   188,   189
+       0,    46,    46,    54,    55,    63,    68,    73,    96,   101,
+     109,   114,   121,   122,   130,   139,   144,   152,   157,   165,
+     170,   178,   187,   194,   195,   203,   208,   213,   218,   223,
+     228,   236,   237,   245,   253,   258,   266,   271,   280,   285,
+     290,   295,   304,   306,   308,   310,   312,   317,   319,   321,
+     326,   328,   330,   335,   337,   339,   344,   346,   351,   353,
+     358,   360,   365,   367,   372,   374
 };
 #endif
 
@@ -1198,8 +1201,501 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+  case 2: /* Program: ExtDefList  */
+#line 47 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Program",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+        root=(yyval.node);
+    }
+#line 1212 "syntax.tab.c"
+    break;
 
-#line 1203 "syntax.tab.c"
+  case 3: /* ExtDefList: %empty  */
+#line 54 "syntax.y"
+            {(yyval.node)=NULL;}
+#line 1218 "syntax.tab.c"
+    break;
+
+  case 4: /* ExtDefList: ExtDef ExtDefList  */
+#line 56 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("ExtDefList",yylineno);
+        addChildren((yyval.node),2,(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1227 "syntax.tab.c"
+    break;
+
+  case 5: /* ExtDef: Specifier FunDec CompSt  */
+#line 64 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("ExtDef",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1236 "syntax.tab.c"
+    break;
+
+  case 6: /* ExtDef: Specifier SEMI  */
+#line 69 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("ExtDef",yylineno);
+        addChildren((yyval.node),2,(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1245 "syntax.tab.c"
+    break;
+
+  case 7: /* ExtDef: Specifier DecList SEMI  */
+#line 74 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("ExtDef",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1254 "syntax.tab.c"
+    break;
+
+  case 8: /* Specifier: TYPE  */
+#line 97 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Specifier",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1263 "syntax.tab.c"
+    break;
+
+  case 9: /* Specifier: StructSpecifier  */
+#line 102 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Specifier",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1272 "syntax.tab.c"
+    break;
+
+  case 10: /* StructSpecifier: STRUCT Tag  */
+#line 110 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("StructSpecifier",yylineno);
+        addChildren((yyval.node),2,(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1281 "syntax.tab.c"
+    break;
+
+  case 11: /* StructSpecifier: STRUCT OptTag LC DefList RC  */
+#line 115 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("StructSpecifier",yylineno);
+        addChildren((yyval.node),5,(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1290 "syntax.tab.c"
+    break;
+
+  case 12: /* OptTag: %empty  */
+#line 121 "syntax.y"
+        { (yyval.node) = NULL; }
+#line 1296 "syntax.tab.c"
+    break;
+
+  case 13: /* OptTag: ID  */
+#line 123 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("OptTag",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1305 "syntax.tab.c"
+    break;
+
+  case 14: /* Tag: ID  */
+#line 131 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Tag",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1314 "syntax.tab.c"
+    break;
+
+  case 15: /* VarDec: ID  */
+#line 140 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("VarDec",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1323 "syntax.tab.c"
+    break;
+
+  case 16: /* VarDec: VarDec LB INT RB  */
+#line 145 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("VarDec",yylineno);
+        addChildren((yyval.node),4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1332 "syntax.tab.c"
+    break;
+
+  case 17: /* FunDec: ID LP RP  */
+#line 153 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("FunDec",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1341 "syntax.tab.c"
+    break;
+
+  case 18: /* FunDec: ID LP VarList RP  */
+#line 158 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("FunDec",yylineno);
+        addChildren((yyval.node),4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1350 "syntax.tab.c"
+    break;
+
+  case 19: /* VarList: ParamDec COMMA VarList  */
+#line 166 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("VarDec",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1359 "syntax.tab.c"
+    break;
+
+  case 20: /* VarList: ParamDec  */
+#line 171 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("VarDec",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1368 "syntax.tab.c"
+    break;
+
+  case 21: /* ParamDec: Specifier VarDec  */
+#line 179 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("ParamDec",yylineno);
+        addChildren((yyval.node),2,(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1377 "syntax.tab.c"
+    break;
+
+  case 22: /* CompSt: LC DefList StmtList RC  */
+#line 188 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("CompSt",yylineno);
+        addChildren((yyval.node),4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1386 "syntax.tab.c"
+    break;
+
+  case 23: /* StmtList: %empty  */
+#line 194 "syntax.y"
+          { (yyval.node) = NULL; }
+#line 1392 "syntax.tab.c"
+    break;
+
+  case 24: /* StmtList: Stmt StmtList  */
+#line 196 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("StmtList",yylineno);
+        addChildren((yyval.node),2,(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1401 "syntax.tab.c"
+    break;
+
+  case 25: /* Stmt: Exp SEMI  */
+#line 204 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Stmt",yylineno);
+        addChildren((yyval.node),2,(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1410 "syntax.tab.c"
+    break;
+
+  case 26: /* Stmt: CompSt  */
+#line 209 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Stmt",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1419 "syntax.tab.c"
+    break;
+
+  case 27: /* Stmt: RETURN Exp SEMI  */
+#line 214 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Stmt",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1428 "syntax.tab.c"
+    break;
+
+  case 28: /* Stmt: IF LP Exp RP Stmt  */
+#line 219 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Stmt",yylineno);
+        addChildren((yyval.node),5,(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1437 "syntax.tab.c"
+    break;
+
+  case 29: /* Stmt: IF LP Exp RP ELSE Stmt  */
+#line 224 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Stmt",yylineno);
+        addChildren((yyval.node),6,(yyvsp[-5].node),(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1446 "syntax.tab.c"
+    break;
+
+  case 30: /* Stmt: WHILE LP Exp RP Stmt  */
+#line 229 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Stmt",yylineno);
+        addChildren((yyval.node),5,(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1455 "syntax.tab.c"
+    break;
+
+  case 31: /* DefList: %empty  */
+#line 236 "syntax.y"
+         { (yyval.node) = NULL; }
+#line 1461 "syntax.tab.c"
+    break;
+
+  case 32: /* DefList: Def DefList  */
+#line 238 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("DefList",yylineno);
+        addChildren((yyval.node),2,(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1470 "syntax.tab.c"
+    break;
+
+  case 33: /* Def: Specifier DecList SEMI  */
+#line 246 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Def",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1479 "syntax.tab.c"
+    break;
+
+  case 34: /* DecList: Dec  */
+#line 254 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("DecList",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1488 "syntax.tab.c"
+    break;
+
+  case 35: /* DecList: Dec COMMA DecList  */
+#line 259 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("DecList",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1497 "syntax.tab.c"
+    break;
+
+  case 36: /* Dec: VarDec  */
+#line 267 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Dec",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1506 "syntax.tab.c"
+    break;
+
+  case 37: /* Dec: VarDec ASSIGNOP AssignmentExp  */
+#line 272 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("Dec",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1515 "syntax.tab.c"
+    break;
+
+  case 38: /* PrimaryExp: ID  */
+#line 281 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("PrimaryExp",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1524 "syntax.tab.c"
+    break;
+
+  case 39: /* PrimaryExp: INT  */
+#line 286 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("PrimaryExp",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1533 "syntax.tab.c"
+    break;
+
+  case 40: /* PrimaryExp: FLOAT  */
+#line 291 "syntax.y"
+    {
+        (yyval.node)=newNonTerminalNode("PrimaryExp",yylineno);
+        addChildren((yyval.node),1,(yyvsp[0].node));
+    }
+#line 1542 "syntax.tab.c"
+    break;
+
+  case 41: /* PrimaryExp: LP Exp RP  */
+#line 296 "syntax.y"
+    {   
+        (yyval.node)=newNonTerminalNode("PrimaryExp",yylineno);
+        addChildren((yyval.node),3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
+    }
+#line 1551 "syntax.tab.c"
+    break;
+
+  case 42: /* PostfixExp: PrimaryExp  */
+#line 305 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1557 "syntax.tab.c"
+    break;
+
+  case 43: /* PostfixExp: PostfixExp LB Exp RB  */
+#line 307 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("PostfixExp", yylineno); addChildren((yyval.node), 4, (yyvsp[-3].node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1563 "syntax.tab.c"
+    break;
+
+  case 44: /* PostfixExp: PostfixExp LP RP  */
+#line 309 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("PostfixExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1569 "syntax.tab.c"
+    break;
+
+  case 45: /* PostfixExp: PostfixExp LP Exp RP  */
+#line 311 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("PostfixExp", yylineno); addChildren((yyval.node), 4, (yyvsp[-3].node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1575 "syntax.tab.c"
+    break;
+
+  case 46: /* PostfixExp: PostfixExp DOT ID  */
+#line 313 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("PostfixExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1581 "syntax.tab.c"
+    break;
+
+  case 47: /* UnaryExp: PostfixExp  */
+#line 318 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1587 "syntax.tab.c"
+    break;
+
+  case 48: /* UnaryExp: MINUS UnaryExp  */
+#line 320 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("UnaryExp", yylineno); addChildren((yyval.node), 2, (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1593 "syntax.tab.c"
+    break;
+
+  case 49: /* UnaryExp: NOT UnaryExp  */
+#line 322 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("UnaryExp", yylineno); addChildren((yyval.node), 2, (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1599 "syntax.tab.c"
+    break;
+
+  case 50: /* MultiplicativeExp: UnaryExp  */
+#line 327 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1605 "syntax.tab.c"
+    break;
+
+  case 51: /* MultiplicativeExp: MultiplicativeExp STAR UnaryExp  */
+#line 329 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("MultiplicativeExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1611 "syntax.tab.c"
+    break;
+
+  case 52: /* MultiplicativeExp: MultiplicativeExp DIV UnaryExp  */
+#line 331 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("MultiplicativeExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1617 "syntax.tab.c"
+    break;
+
+  case 53: /* AdditiveExp: MultiplicativeExp  */
+#line 336 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1623 "syntax.tab.c"
+    break;
+
+  case 54: /* AdditiveExp: AdditiveExp PLUS MultiplicativeExp  */
+#line 338 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("AdditiveExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1629 "syntax.tab.c"
+    break;
+
+  case 55: /* AdditiveExp: AdditiveExp MINUS MultiplicativeExp  */
+#line 340 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("AdditiveExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1635 "syntax.tab.c"
+    break;
+
+  case 56: /* RelationalExp: AdditiveExp  */
+#line 345 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1641 "syntax.tab.c"
+    break;
+
+  case 57: /* RelationalExp: RelationalExp RELOP AdditiveExp  */
+#line 347 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("RelationalExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1647 "syntax.tab.c"
+    break;
+
+  case 58: /* LogicalAndExp: RelationalExp  */
+#line 352 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1653 "syntax.tab.c"
+    break;
+
+  case 59: /* LogicalAndExp: LogicalAndExp AND RelationalExp  */
+#line 354 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("LogicalAndExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1659 "syntax.tab.c"
+    break;
+
+  case 60: /* LogicalOrExp: LogicalAndExp  */
+#line 359 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1665 "syntax.tab.c"
+    break;
+
+  case 61: /* LogicalOrExp: LogicalOrExp OR LogicalAndExp  */
+#line 361 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("LogicalOrExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1671 "syntax.tab.c"
+    break;
+
+  case 62: /* AssignmentExp: LogicalOrExp  */
+#line 366 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1677 "syntax.tab.c"
+    break;
+
+  case 63: /* AssignmentExp: LogicalOrExp ASSIGNOP AssignmentExp  */
+#line 368 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("AssignmentExp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1683 "syntax.tab.c"
+    break;
+
+  case 64: /* Exp: AssignmentExp  */
+#line 373 "syntax.y"
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1689 "syntax.tab.c"
+    break;
+
+  case 65: /* Exp: Exp COMMA AssignmentExp  */
+#line 375 "syntax.y"
+    { (yyval.node) = newNonTerminalNode("Exp", yylineno); addChildren((yyval.node), 3, (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)); }
+#line 1695 "syntax.tab.c"
+    break;
+
+
+#line 1699 "syntax.tab.c"
 
       default: break;
     }
@@ -1392,8 +1888,9 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 193 "syntax.y"
+#line 380 "syntax.y"
 
 void yyerror(const char* s){
-    fprintf(stderr,"Syntax error at Line: %d, Column: %d, %s\n",yylineno,yycolumn,s);
+    has_error=1;
+    fprintf(stderr,"Error type B at Line: %d, Column: %d, %s\n",yylineno,yycolumn,s);
 }

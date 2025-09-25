@@ -1,8 +1,10 @@
 %option header-file="lexical.h"
 %option yylineno noyywrap
 %{
+    #include"Tree.h"
     #include"syntax.tab.h"
     extern int yycolumn;
+    extern int has_error;
     //#define printf(...)
 %}
 
@@ -32,63 +34,69 @@ id              [_a-zA-Z]+[0-9_a-zA-Z]*
 [ \t]           {}
 [\n\r]          {yycolumn=1;}
 
-"//"[^\n]*      { printf("Line %d: single-line comment\n", yylineno); }
+"//"[^\n]*      { }
 
-"/*"            { BEGIN(COMMENT);
-                  printf("Line %d: multi-line comment starts\n", yylineno); }
+"/*"            { BEGIN(COMMENT); }
 
-<COMMENT>"*/"   { BEGIN(INITIAL);
-                  printf("Line %d: multi-line comment ends\n", yylineno); }
+<COMMENT>"*/"   { BEGIN(INITIAL);}
 
 <COMMENT>\n     {}
 <COMMENT>.      {}
 
-;               {printf("Line %d: a semi\n",yylineno); return SEMI;}
-,               {printf("Line %d: a coma\n",yylineno); return COMMA;}
-"=="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
-"!="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
-">="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
-"<="              { printf("Line %d: a relop\n",yylineno); return RELOP; }
-">"               { printf("Line %d: a relop\n",yylineno); return RELOP; }
-"<"               { printf("Line %d: a relop\n",yylineno); return RELOP; }
-"="               { printf("Line %d: a assignop\n",yylineno); return ASSIGNOP; }
-\+              {printf("Line %d: a plus\n",yylineno);return PLUS;}
-\-              {printf("Line %d: a minus\n",yylineno);return MINUS;}
-\*              {printf("Line %d: a multiply\n",yylineno);return STAR;}
-\/              {printf("Line %d: a division\n",yylineno);return DIV;}
-&&              {printf("Line %d: a and\n",yylineno); return AND;}
-\|\|            {printf("Line %d: a or\n",yylineno); return OR;}
-\.              {printf("Line %d: a dot\n",yylineno); return DOT;}
-!               {printf("Line %d: a not\n",yylineno); return NOT;}
-{type}          {printf("Line %d: a type\n",yylineno); return TYPE;} 
-\(              {printf("Line %d: a lp\n",yylineno); return LP;}
-\)              {printf("Line %d: a rp\n",yylineno); return RP;}
-\[              {printf("Line %d: a lb\n",yylineno); return LB;}
-\]              {printf("Line %d: a rb\n",yylineno); return RB;}
-\{              {printf("Line %d: a lc\n",yylineno); return LC;}
-\}              {printf("Line %d: a rc\n",yylineno); return RC;}
 
-{reserved}      { printf("Line %d: a reserved word: %s\n",yylineno,yytext); }
+;               {yylval.node=newOtherNode("SEMI"); return SEMI;}
+,               {yylval.node=newOtherNode("COMMA"); return COMMA;}
+"=="            { yylval.node=newOtherNode("RELOP"); return RELOP; }
+">="            { yylval.node=newOtherNode("RELOP"); return RELOP; }
+"<="            { yylval.node=newOtherNode("RELOP"); return RELOP; }
+">"             { yylval.node=newOtherNode("RELOP"); return RELOP; }
+"<"             { yylval.node=newOtherNode("RELOP"); return RELOP; }
+"!="            { yylval.node=newOtherNode("RELOP"); return RELOP; }
+"="             { yylval.node=newOtherNode("ASSIGNOP"); return ASSIGNOP; }
+\+              {yylval.node=newOtherNode("PLUS"); return PLUS;}
+\-              {yylval.node=newOtherNode("MINUS"); return MINUS;}
+\*              {yylval.node=newOtherNode("STAR"); return STAR;}
+\/              {yylval.node=newOtherNode("DIV"); return DIV;}
+&&              {yylval.node=newOtherNode("AND"); return AND;}
+\|\|            {yylval.node=newOtherNode("OR"); return OR;}
+\.              {yylval.node=newOtherNode("DOT"); return DOT;}
+!               {yylval.node=newOtherNode("NOT"); return NOT;}
+{type}          {yylval.node=newOtherNode("TYPE"); return TYPE;} 
+\(              {yylval.node=newOtherNode("LP"); return LP;}
+\)              {yylval.node=newOtherNode("RP"); return RP;}
+\[              {yylval.node=newOtherNode("LB"); return LB;}
+\]              {yylval.node=newOtherNode("RB"); return RB;}
+\{              {yylval.node=newOtherNode("LC"); return LC;}
+\}              {yylval.node=newOtherNode("RC"); return RC;}
 
-{struct}        {printf("Line %d: a struct\n",yylineno); return STRUCT;}
-{return}        {printf("Line %d: a return\n",yylineno); return RETURN;}
-{if}            {printf("Line %d: a if\n",yylineno); return IF;}
-{else}          {printf("Line %d: a else\n",yylineno); return ELSE;}
-{while}         {printf("Line %d: a while\n",yylineno); return WHILE;}
 
-{id}            {printf("Line %d: an identifier: %s\n",yylineno,yytext); return ID;}
-[0-9]+[a-zA-Z_][a-zA-Z_]*      {printf("Error type A at Line %d: identifier can't start with digit!\n",yylineno);}
+{reserved}      { /* This is a reserved word, do nothing or handle as needed */ }
+
+{struct}        {yylval.node=newOtherNode("STRUCT"); return STRUCT;}
+{return}        {yylval.node=newOtherNode("RETURN"); return RETURN;}
+{if}            {yylval.node=newOtherNode("IF"); return IF;}
+{else}          {yylval.node=newOtherNode("ELSE"); return ELSE;}
+{while}         {yylval.node=newOtherNode("WHILE"); return WHILE;}
+
+{id}            {
+                    yylval.node=newIDNode(yytext);    
+                    return ID;
+                }
+[0-9]+[a-zA-Z_][a-zA-Z_]*      {}
 
 {int}               { 
-                        yylval.type_int=(int)strtol(yytext,NULL,0);
+                        yylval.node=newIntNode((int)strtol(yytext,NULL,0));
                         return INT;
                     }
-0[0-7]*[89][0-9]*   { printf("Line %d: invalid octal literal %s\n", yylineno, yytext); }
-0[xX][A-Za-z0-9]*   { printf("Line %d: invalid hex literal %s\n", yylineno, yytext); }
+0[0-7]*[89][0-9]*   {}
+0[xX][A-Za-z0-9]*   {}
 
-{float}         {printf("Line %d: a float: %lf\n", yylineno,strtof(yytext,NULL)); return FLOAT;}
+{float}         {
+                    yylval.node=newFloatNode(strtof(yytext,NULL));
+                    return FLOAT;}
 
-.               { printf("Error type A at Line %d: You made a mistake \'%s\' like an idiot!\n",yylineno,yytext);}
+
+.               { has_error=1; fprintf(stderr,"Error type A at Line %d: You made a mistake \'%s\' like an idiot!\n",yylineno,yytext);}
 
 
 
