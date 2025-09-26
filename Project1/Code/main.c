@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include "Tree.h"
-#include"lexical.h"
+#include"lex.yy.c"
 #include<string.h>
 #include"syntax.tab.h"
 

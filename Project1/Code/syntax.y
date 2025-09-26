@@ -22,7 +22,7 @@ int yycolumn=1;
 %token <node> INT
 %token <node> FLOAT
 %token <node> ID
-%type <node> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier
+%type <node> Program ExtDefList ExtDef Specifier StructSpecifier
 %type <node> OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt
 %type <node> DefList Def DecList Dec
 %type <node> Exp PrimaryExp PostfixExp UnaryExp MultiplicativeExp AdditiveExp
@@ -75,20 +75,14 @@ ExtDef:
         $$=newNonTerminalNode("ExtDef",yylineno);
         addChildren($$,3,$1,$2,$3);
     }
+    | error SEMI
+    {
+        yyerrok;
+    }
+    ;
     ;
 
-ExtDecList:
-    VarDec
-    {
-        $$=newNonTerminalNode("ExtDecList",yylineno);
-        addChildren($$,1,$1);
-    }
-    | VarDec COMMA ExtDecList
-    {
-        $$=newNonTerminalNode("ExtDecList",yylineno);
-        addChildren($$,3,$1,$2,$3);
-    }
-    ;
+
 
 
 
@@ -191,6 +185,29 @@ CompSt:
     }
     ;
 
+
+
+DefList: { $$ = NULL; }
+    | Def DefList
+    {
+        $$=newNonTerminalNode("DefList",yylineno);
+        addChildren($$,2,$1,$2);
+    }
+    ;
+
+Def:
+    Specifier DecList SEMI
+    {
+        $$=newNonTerminalNode("Def",yylineno);
+        addChildren($$,3,$1,$2,$3);
+    }
+    | error SEMI
+    {
+        yyerrok;
+    }
+    ;
+    ;
+
 StmtList: { $$ = NULL; }
     | Stmt StmtList
     {
@@ -230,24 +247,13 @@ Stmt:
         $$=newNonTerminalNode("Stmt",yylineno);
         addChildren($$,5,$1,$2,$3,$4,$5);
     }
-    ;
-
-
-DefList: { $$ = NULL; }
-    | Def DefList
+    | error SEMI
     {
-        $$=newNonTerminalNode("DefList",yylineno);
-        addChildren($$,2,$1,$2);
+        yyerrok;
     }
     ;
-
-Def:
-    Specifier DecList SEMI
-    {
-        $$=newNonTerminalNode("Def",yylineno);
-        addChildren($$,3,$1,$2,$3);
-    }
     ;
+
 
 DecList:
     Dec
@@ -303,7 +309,7 @@ PrimaryExp:
 PostfixExp:
     PrimaryExp
     { $$ = $1; }
-    | PostfixExp LB Exp RB
+    | PostfixExp LB AssignmentExp RB
     { $$ = newNonTerminalNode("PostfixExp", yylineno); addChildren($$, 4, $1, $2, $3, $4); }
     | PostfixExp LP RP
     { $$ = newNonTerminalNode("PostfixExp", yylineno); addChildren($$, 3, $1, $2, $3); }
@@ -380,5 +386,5 @@ Exp:
 %%
 void yyerror(const char* s){
     has_error=1;
-    fprintf(stderr,"Error type B at Line: %d, Column: %d, %s\n",yylineno,yycolumn,s);
+    printf("Error type B at Line %d: %s\n",yylineno,s);
 }

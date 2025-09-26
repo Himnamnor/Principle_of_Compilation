@@ -16,7 +16,7 @@ TreeNode *newIDNode(const char *name)
     TreeNode *node = (TreeNode *)malloc(sizeof(TreeNode));
     node->nodeKind = NODE_ID;
     strcpy(node->nodeName, "ID");
-    node->nodeVal.idName = strdup(name);
+    strcpy(node->nodeVal.idName, name);
     node->child = NULL;
     node->sibling = NULL;
     return node;
@@ -27,7 +27,7 @@ TreeNode *newTypeNode(const char *type)
     TreeNode *node = (TreeNode *)malloc(sizeof(TreeNode));
     node->nodeKind = NODE_TYPE;
     strcpy(node->nodeName, "TYPE");
-    node->nodeVal.typeName = strdup(type);
+    strcpy(node->nodeVal.typeName, type);
     node->child = NULL;
     node->sibling = NULL;
     return node;

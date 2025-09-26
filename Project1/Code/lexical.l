@@ -96,7 +96,7 @@ id              [_a-zA-Z]+[0-9_a-zA-Z]*
                     return FLOAT;}
 
 
-.               { has_error=1; fprintf(stderr,"Error type A at Line %d: You made a mistake \'%s\' like an idiot!\n",yylineno,yytext);}
+.               { has_error=1; printf("Error type A at Line %d: You made a mistake \'%s\' like an idiot!\n",yylineno,yytext);}
 
 
 

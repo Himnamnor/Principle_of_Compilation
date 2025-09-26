@@ -24,8 +24,8 @@ typedef struct TreeNode
         int lineNum;
         int ival;
         float fval;
-        char *idName;
-        char *typeName;
+        char idName[50];
+        char typeName[50];
     } nodeVal;
     struct TreeNode *child;
     struct TreeNode *sibling;
