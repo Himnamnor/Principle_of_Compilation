@@ -61,7 +61,7 @@ id              [_a-zA-Z]+[0-9_a-zA-Z]*
 \|\|            {yylval.node=newOtherNode("OR"); return OR;}
 \.              {yylval.node=newOtherNode("DOT"); return DOT;}
 !               {yylval.node=newOtherNode("NOT"); return NOT;}
-{type}          {yylval.node=newOtherNode("TYPE"); return TYPE;} 
+{type}          {yylval.node=newTypeNode(yytext); return TYPE;} 
 \(              {yylval.node=newOtherNode("LP"); return LP;}
 \)              {yylval.node=newOtherNode("RP"); return RP;}
 \[              {yylval.node=newOtherNode("LB"); return LB;}

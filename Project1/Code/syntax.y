@@ -274,7 +274,7 @@ Dec:
         $$=newNonTerminalNode("Dec",yylineno);
         addChildren($$,1,$1);
     }
-    | VarDec ASSIGNOP AssignmentExp
+    | VarDec ASSIGNOP Exp
     {
         $$=newNonTerminalNode("Dec",yylineno);
         addChildren($$,3,$1,$2,$3);
@@ -284,25 +284,13 @@ Dec:
 
 PrimaryExp:
     ID 
-    {
-        $$=newNonTerminalNode("PrimaryExp",yylineno);
-        addChildren($$,1,$1);
-    }
+    { $$ = $1; }
     | INT
-    {
-        $$=newNonTerminalNode("PrimaryExp",yylineno);
-        addChildren($$,1,$1);
-    }
+    { $$ = $1; }
     | FLOAT
-    {
-        $$=newNonTerminalNode("PrimaryExp",yylineno);
-        addChildren($$,1,$1);
-    }
+    { $$ = $1; }
     | LP Exp RP
-    {   
-        $$=newNonTerminalNode("PrimaryExp",yylineno);
-        addChildren($$,3,$1,$2,$3);
-    }
+    { $$ = $2; } 
     ;
 
 
@@ -376,7 +364,14 @@ AssignmentExp:
 
 Exp:
     AssignmentExp
-    { $$ = $1; }
+    {
+        if ($1->nodeKind != NODE_NONTERMINAL) {
+            $$ = newNonTerminalNode("Exp", yylineno);
+            addChildren($$, 1, $1);
+        } else {
+            $$ = $1;
+        }
+    }
     | Exp COMMA AssignmentExp
     { $$ = newNonTerminalNode("Exp", yylineno); addChildren($$, 3, $1, $2, $3); }
     ;

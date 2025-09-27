@@ -92,30 +92,45 @@ void printTree(TreeNode *node, int level)
 {
     if (node == NULL)
         return;
-    for (int i = 0; i < level; i++)
-        printf("  ");
-    printf("%s", node->nodeName);
-    switch (node->nodeKind)
+    if (strcmp(node->nodeName, "PostfixExp") == 0 ||
+        strcmp(node->nodeName, "UnaryExp") == 0 ||
+        strcmp(node->nodeName, "MultiplicativeExp") == 0 ||
+        strcmp(node->nodeName, "AdditiveExp") == 0 ||
+        strcmp(node->nodeName, "RelationalExp") == 0 ||
+        strcmp(node->nodeName, "LogicalAndExp") == 0 ||
+        strcmp(node->nodeName, "LogicalOrExp") == 0 ||
+        strcmp(node->nodeName, "AssignmentExp") == 0||
+        strcmp(node->nodeName,"PrimaryExp")==0
+    )
     {
-    case NODE_NONTERMINAL:
-        printf(" (%d)", node->nodeVal.lineNum);
-        break;
-    case NODE_ID:
-        printf(": %s", node->nodeVal.idName);
-        break;
-    case NODE_TYPE:
-        printf(": %s", node->nodeVal.typeName);
-        break;
-    case NODE_INT:
-        printf(": %d", node->nodeVal.ival);
-        break;
-    case NODE_FLOAT:
-        printf(": %f", node->nodeVal.fval);
-        break;
-    default:
-        break;
     }
-    printf("\n");
+    else
+    {
+        for (int i = 0; i < level; i++)
+            printf("  ");
+        printf("%s", node->nodeName);
+        switch (node->nodeKind)
+        {
+        case NODE_NONTERMINAL:
+            printf(" (%d)", node->nodeVal.lineNum);
+            break;
+        case NODE_ID:
+            printf(": %s", node->nodeVal.idName);
+            break;
+        case NODE_TYPE:
+            printf(": %s", node->nodeVal.typeName);
+            break;
+        case NODE_INT:
+            printf(": %d", node->nodeVal.ival);
+            break;
+        case NODE_FLOAT:
+            printf(": %f", node->nodeVal.fval);
+            break;
+        default:
+            break;
+        }
+        printf("\n");
+    }
     printTree(node->child, level + 1);
     printTree(node->sibling, level);
 }
