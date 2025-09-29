@@ -22,7 +22,7 @@ int yycolumn=1;
 %type <node> OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt
 %type <node> DefList Def DecList Dec
 %type <node> Exp PrimaryExp PostfixExp UnaryExp MultiplicativeExp AdditiveExp
-%type <node> RelationalExp LogicalAndExp LogicalOrExp AssignmentExp
+%type <node> RelationalExp LogicalAndExp LogicalOrExp AssignmentExp Args
 %token <node>SEMI COMMA ASSIGNOP RELOP PLUS MINUS STAR DIV AND OR DOT NOT TYPE LP RP LB RB LC RC STRUCT RETURN IF ELSE WHILE
 
 %right ASSIGNOP
@@ -33,6 +33,7 @@ int yycolumn=1;
 %left STAR DIV
 %right NOT UMINUS 
 %left DOT LB RB LP RP
+%nonassoc LOWER_THAN_ELSE
 
 
 
@@ -164,12 +165,12 @@ FunDec:
 VarList:
     ParamDec COMMA VarList
     {
-        $$=newNonTerminalNode("VarDec",@$.first_line);
+        $$=newNonTerminalNode("VarList",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     | ParamDec
     {
-        $$=newNonTerminalNode("VarDec",@$.first_line);
+        $$=newNonTerminalNode("VarList",@$.first_line);
         addChildren($$,1,$1);
     }
     ;
@@ -238,15 +239,15 @@ Stmt:
         $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
-    | IF LP Exp RP Stmt
+    | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE
     {
         $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,5,$1,$2,$3,$4,$5);
     }
-    | IF LP Exp RP ELSE Stmt
+    | IF LP Exp RP Stmt ELSE Stmt
     {
         $$=newNonTerminalNode("Stmt",@$.first_line);
-        addChildren($$,6,$1,$2,$3,$4,$5,$6);
+        addChildren($$,7,$1,$2,$3,$4,$5,$6,$7);
     }
     | WHILE LP Exp RP Stmt
     {
@@ -305,9 +306,9 @@ PostfixExp:
     { $$ = $1; }
     | PostfixExp LB AssignmentExp RB
     { $$ = newNonTerminalNode("PostfixExp", yylineno); addChildren($$, 4, $1, $2, $3, $4); }
-    | PostfixExp LP RP
+    | ID LP RP
     { $$ = newNonTerminalNode("PostfixExp", yylineno); addChildren($$, 3, $1, $2, $3); }
-    | PostfixExp LP Exp RP
+    | ID LP Args RP
     { $$ = newNonTerminalNode("PostfixExp", yylineno); addChildren($$, 4, $1, $2, $3, $4); }
     | PostfixExp DOT ID
     { $$ = newNonTerminalNode("PostfixExp", yylineno); addChildren($$, 3, $1, $2, $3); }
@@ -381,6 +382,16 @@ Exp:
     | Exp COMMA AssignmentExp
     { $$ = newNonTerminalNode("Exp", @$.first_line); addChildren($$, 3, $1, $2, $3); }
     ;
+
+Args:
+    Exp COMMA Args
+    {
+        $$=newNonTerminalNode("Args",@$.first_line); addChildren($$,3,$1,$2,$3);
+    }
+    | Exp
+    {
+        $$=newNonTerminalNode("Args",@$.first_line); addChildren($$,1,$1);
+    }
 
 
 

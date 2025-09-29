@@ -81,7 +81,8 @@ extern int yydebug;
     IF = 282,                      /* IF  */
     ELSE = 283,                    /* ELSE  */
     WHILE = 284,                   /* WHILE  */
-    UMINUS = 285                   /* UMINUS  */
+    UMINUS = 285,                  /* UMINUS  */
+    LOWER_THAN_ELSE = 286          /* LOWER_THAN_ELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -94,7 +95,7 @@ union YYSTYPE
 
     TreeNode* node;
 
-#line 98 "./syntax.tab.h"
+#line 99 "./syntax.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
