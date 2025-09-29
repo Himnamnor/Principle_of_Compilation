@@ -6,6 +6,11 @@
     extern int yycolumn;
     extern int has_error;
     //#define printf(...)
+    #define YY_USER_ACTION \
+    yylloc.first_line=yylloc.last_line=yylineno;    \
+    yylloc.first_column=yycolumn;                   \
+    yylloc.last_column=yycolumn+yyleng-1;           \
+    yycolumn+=yyleng;
 %}
 
 %x COMMENT
@@ -34,7 +39,7 @@ id              [_a-zA-Z]+[0-9_a-zA-Z]*
 [ \t]           {}
 [\n\r]          {yycolumn=1;}
 
-"//"[^\n]*      { }
+"//"[^\n]*      {  }
 
 "/*"            { BEGIN(COMMENT); }
 

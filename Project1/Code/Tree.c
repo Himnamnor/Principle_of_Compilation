@@ -103,6 +103,9 @@ void printTree(TreeNode *node, int level)
         strcmp(node->nodeName,"PrimaryExp")==0
     )
     {
+        for (int i = 0; i < level; i++)
+            printf("  ");
+        printf("%s (%d)\n", "Exp", node->nodeVal.lineNum);
     }
     else
     {

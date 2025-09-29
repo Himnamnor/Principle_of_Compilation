@@ -7,14 +7,10 @@ extern TreeNode* root;
 extern int has_error;
 void yyerror(const char *s);
 int yycolumn=1;
-#define YY_USER_ACTION \
-    yylloc.first_line=yylloc.last_line=yylineno;    \
-    yylloc.first_column=yycolumn;                   \
-    yylloc.last_column=yycolumn+yyleng-1;           \
-    yycolumn+=yyleng;
+
 %}
 %debug
-
+%locations
 %union{
     TreeNode* node;
 }
@@ -22,7 +18,7 @@ int yycolumn=1;
 %token <node> INT
 %token <node> FLOAT
 %token <node> ID
-%type <node> Program ExtDefList ExtDef Specifier StructSpecifier
+%type <node> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier
 %type <node> OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt
 %type <node> DefList Def DecList Dec
 %type <node> Exp PrimaryExp PostfixExp UnaryExp MultiplicativeExp AdditiveExp
@@ -45,7 +41,7 @@ int yycolumn=1;
 
 Program: ExtDefList 
     {
-        $$=newNonTerminalNode("Program",yylineno);
+        $$=newNonTerminalNode("Program",@$.first_line);
         addChildren($$,1,$1);
         root=$$;
     }
@@ -54,7 +50,7 @@ Program: ExtDefList
 ExtDefList: {$$=NULL;}
     | ExtDef ExtDefList
     {
-        $$=newNonTerminalNode("ExtDefList",yylineno);
+        $$=newNonTerminalNode("ExtDefList",@$.first_line);
         addChildren($$,2,$1,$2);
     }
     ;
@@ -62,17 +58,17 @@ ExtDefList: {$$=NULL;}
 ExtDef: 
     Specifier FunDec CompSt
     {
-        $$=newNonTerminalNode("ExtDef",yylineno);
+        $$=newNonTerminalNode("ExtDef",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     | Specifier SEMI
     {
-        $$=newNonTerminalNode("ExtDef",yylineno);
+        $$=newNonTerminalNode("ExtDef",@$.first_line);
         addChildren($$,2,$1,$2);
     }
-    | Specifier DecList SEMI
+    | Specifier ExtDecList SEMI
     {
-        $$=newNonTerminalNode("ExtDef",yylineno);
+        $$=newNonTerminalNode("ExtDef",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     | error SEMI
@@ -83,18 +79,28 @@ ExtDef:
     ;
 
 
-
+ExtDecList:
+    VarDec
+    {
+        $$=newNonTerminalNode("ExtDecList",@$.first_line);
+        addChildren($$,1,$1);
+    }
+    | VarDec COMMA ExtDecList
+    {
+        $$=newNonTerminalNode("ExtDecList",@$.first_line);
+        addChildren($$,3,$1,$2,$3);
+    }
 
 
 Specifier:
     TYPE
     {
-        $$=newNonTerminalNode("Specifier",yylineno);
+        $$=newNonTerminalNode("Specifier",@$.first_line);
         addChildren($$,1,$1);
     }
     | StructSpecifier
     {
-        $$=newNonTerminalNode("Specifier",yylineno);
+        $$=newNonTerminalNode("Specifier",@$.first_line);
         addChildren($$,1,$1);
     }
     ;
@@ -102,12 +108,12 @@ Specifier:
 StructSpecifier:
     STRUCT Tag
     {
-        $$=newNonTerminalNode("StructSpecifier",yylineno);
+        $$=newNonTerminalNode("StructSpecifier",@$.first_line);
         addChildren($$,2,$1,$2);
     }
     | STRUCT OptTag LC DefList RC
     {
-        $$=newNonTerminalNode("StructSpecifier",yylineno);
+        $$=newNonTerminalNode("StructSpecifier",@$.first_line);
         addChildren($$,5,$1,$2,$3,$4,$5);
     }
     ;
@@ -115,7 +121,7 @@ StructSpecifier:
 OptTag: { $$ = NULL; }
     | ID
     {
-        $$=newNonTerminalNode("OptTag",yylineno);
+        $$=newNonTerminalNode("OptTag",@$.first_line);
         addChildren($$,1,$1);
     }
     ;
@@ -123,7 +129,7 @@ OptTag: { $$ = NULL; }
 Tag:
     ID
     {
-        $$=newNonTerminalNode("Tag",yylineno);
+        $$=newNonTerminalNode("Tag",@$.first_line);
         addChildren($$,1,$1);
     }
     ;
@@ -132,12 +138,12 @@ Tag:
 VarDec:
     ID
     {
-        $$=newNonTerminalNode("VarDec",yylineno);
+        $$=newNonTerminalNode("VarDec",@$.first_line);
         addChildren($$,1,$1);
     }
     | VarDec LB INT RB
     {
-        $$=newNonTerminalNode("VarDec",yylineno);
+        $$=newNonTerminalNode("VarDec",@$.first_line);
         addChildren($$,4,$1,$2,$3,$4);
     }
     ;
@@ -145,12 +151,12 @@ VarDec:
 FunDec:
     ID LP RP
     {
-        $$=newNonTerminalNode("FunDec",yylineno);
+        $$=newNonTerminalNode("FunDec",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     | ID LP VarList RP
     {
-        $$=newNonTerminalNode("FunDec",yylineno);
+        $$=newNonTerminalNode("FunDec",@$.first_line);
         addChildren($$,4,$1,$2,$3,$4);
     }
     ;
@@ -158,12 +164,12 @@ FunDec:
 VarList:
     ParamDec COMMA VarList
     {
-        $$=newNonTerminalNode("VarDec",yylineno);
+        $$=newNonTerminalNode("VarDec",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     | ParamDec
     {
-        $$=newNonTerminalNode("VarDec",yylineno);
+        $$=newNonTerminalNode("VarDec",@$.first_line);
         addChildren($$,1,$1);
     }
     ;
@@ -171,7 +177,7 @@ VarList:
 ParamDec:
     Specifier VarDec
     {
-        $$=newNonTerminalNode("ParamDec",yylineno);
+        $$=newNonTerminalNode("ParamDec",@$.first_line);
         addChildren($$,2,$1,$2);
     }
     ;
@@ -180,7 +186,7 @@ ParamDec:
 CompSt:
     LC DefList StmtList RC
     {
-        $$=newNonTerminalNode("CompSt",yylineno);
+        $$=newNonTerminalNode("CompSt",@$.first_line);
         addChildren($$,4,$1,$2,$3,$4);
     }
     ;
@@ -190,7 +196,7 @@ CompSt:
 DefList: { $$ = NULL; }
     | Def DefList
     {
-        $$=newNonTerminalNode("DefList",yylineno);
+        $$=newNonTerminalNode("DefList",@$.first_line);
         addChildren($$,2,$1,$2);
     }
     ;
@@ -198,7 +204,7 @@ DefList: { $$ = NULL; }
 Def:
     Specifier DecList SEMI
     {
-        $$=newNonTerminalNode("Def",yylineno);
+        $$=newNonTerminalNode("Def",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     | error SEMI
@@ -211,7 +217,7 @@ Def:
 StmtList: { $$ = NULL; }
     | Stmt StmtList
     {
-        $$=newNonTerminalNode("StmtList",yylineno);
+        $$=newNonTerminalNode("StmtList",@$.first_line);
         addChildren($$,2,$1,$2);
     }
     ;
@@ -219,32 +225,32 @@ StmtList: { $$ = NULL; }
 Stmt:
     Exp SEMI
     {
-        $$=newNonTerminalNode("Stmt",yylineno);
+        $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,2,$1,$2);
     }
     | CompSt
     {
-        $$=newNonTerminalNode("Stmt",yylineno);
+        $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,1,$1);
     }
     | RETURN Exp SEMI
     {
-        $$=newNonTerminalNode("Stmt",yylineno);
+        $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     | IF LP Exp RP Stmt
     {
-        $$=newNonTerminalNode("Stmt",yylineno);
+        $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,5,$1,$2,$3,$4,$5);
     }
     | IF LP Exp RP ELSE Stmt
     {
-        $$=newNonTerminalNode("Stmt",yylineno);
+        $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,6,$1,$2,$3,$4,$5,$6);
     }
     | WHILE LP Exp RP Stmt
     {
-        $$=newNonTerminalNode("Stmt",yylineno);
+        $$=newNonTerminalNode("Stmt",@$.first_line);
         addChildren($$,5,$1,$2,$3,$4,$5);
     }
     | error SEMI
@@ -258,12 +264,12 @@ Stmt:
 DecList:
     Dec
     {
-        $$=newNonTerminalNode("DecList",yylineno);
+        $$=newNonTerminalNode("DecList",@$.first_line);
         addChildren($$,1,$1);
     }
     | Dec COMMA DecList
     {
-        $$=newNonTerminalNode("DecList",yylineno);
+        $$=newNonTerminalNode("DecList",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     ;
@@ -271,12 +277,12 @@ DecList:
 Dec:
     VarDec
     {
-        $$=newNonTerminalNode("Dec",yylineno);
+        $$=newNonTerminalNode("Dec",@$.first_line);
         addChildren($$,1,$1);
     }
     | VarDec ASSIGNOP Exp
     {
-        $$=newNonTerminalNode("Dec",yylineno);
+        $$=newNonTerminalNode("Dec",@$.first_line);
         addChildren($$,3,$1,$2,$3);
     }
     ;
@@ -284,13 +290,13 @@ Dec:
 
 PrimaryExp:
     ID 
-    { $$ = $1; }
+    { $$ = newNonTerminalNode("PrimaryExp", @$.first_line); addChildren($$, 1, $1); }
     | INT
-    { $$ = $1; }
+    { $$ = newNonTerminalNode("PrimaryExp", @$.first_line); addChildren($$, 1, $1); }
     | FLOAT
-    { $$ = $1; }
+    { $$ = newNonTerminalNode("PrimaryExp", @$.first_line); addChildren($$, 1, $1); }
     | LP Exp RP
-    { $$ = $2; } 
+    { $$ = newNonTerminalNode("PrimaryExp", @$.first_line); addChildren($$, 1, $2); } 
     ;
 
 
@@ -366,14 +372,14 @@ Exp:
     AssignmentExp
     {
         if ($1->nodeKind != NODE_NONTERMINAL) {
-            $$ = newNonTerminalNode("Exp", yylineno);
+            $$ = newNonTerminalNode("Exp", @$.first_line);
             addChildren($$, 1, $1);
         } else {
             $$ = $1;
         }
     }
     | Exp COMMA AssignmentExp
-    { $$ = newNonTerminalNode("Exp", yylineno); addChildren($$, 3, $1, $2, $3); }
+    { $$ = newNonTerminalNode("Exp", @$.first_line); addChildren($$, 3, $1, $2, $3); }
     ;
 
 
