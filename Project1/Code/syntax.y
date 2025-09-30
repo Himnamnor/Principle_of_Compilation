@@ -281,7 +281,7 @@ Dec:
         $$=newNonTerminalNode("Dec",@$.first_line);
         addChildren($$,1,$1);
     }
-    | VarDec ASSIGNOP Exp
+    | VarDec ASSIGNOP AssignmentExp
     {
         $$=newNonTerminalNode("Dec",@$.first_line);
         addChildren($$,3,$1,$2,$3);
@@ -297,7 +297,7 @@ PrimaryExp:
     | FLOAT
     { $$ = newNonTerminalNode("PrimaryExp", @$.first_line); addChildren($$, 1, $1); }
     | LP Exp RP
-    { $$ = newNonTerminalNode("PrimaryExp", @$.first_line); addChildren($$, 1, $2); } 
+    { $$ = newNonTerminalNode("PrimaryExp", @$.first_line); addChildren($$, 3, $1,$2,$3); } 
     ;
 
 

@@ -1,6 +1,5 @@
 State 25 conflicts: 1 shift/reduce
 State 30 conflicts: 1 shift/reduce
-State 98 conflicts: 1 shift/reduce
 State 123 conflicts: 2 reduce/reduce
 State 125 conflicts: 1 shift/reduce
 
@@ -67,7 +66,7 @@ Grammar
    39        | Dec COMMA DecList
 
    40 Dec: VarDec
-   41    | VarDec ASSIGNOP Exp
+   41    | VarDec ASSIGNOP AssignmentExp
 
    42 PrimaryExp: ID
    43           | INT
@@ -233,10 +232,10 @@ Nonterminals, with rules where they appear
         on right: 65 66 67
     AssignmentExp <node> (60)
         on left: 66 67
-        on right: 47 67 68 69
+        on right: 41 47 67 68 69
     Exp <node> (61)
         on left: 68 69
-        on right: 31 33 34 35 36 41 45 69 70 71
+        on right: 31 33 34 35 36 45 69 70 71
     Args <node> (62)
         on left: 70 71
         on right: 49 70
@@ -666,7 +665,7 @@ State 40
 
    18 VarDec: VarDec • LB INT RB
    40 Dec: VarDec •
-   41    | VarDec • ASSIGNOP Exp
+   41    | VarDec • ASSIGNOP AssignmentExp
 
     ASSIGNOP  shift, and go to state 72
     LB        shift, and go to state 24
@@ -1014,7 +1013,7 @@ State 71
 
 State 72
 
-   41 Dec: VarDec ASSIGNOP • Exp
+   41 Dec: VarDec ASSIGNOP • AssignmentExp
 
     INT    shift, and go to state 50
     FLOAT  shift, and go to state 51
@@ -1031,8 +1030,7 @@ State 72
     RelationalExp      go to state 67
     LogicalAndExp      go to state 68
     LogicalOrExp       go to state 69
-    AssignmentExp      go to state 70
-    Exp                go to state 98
+    AssignmentExp      go to state 98
 
 
 State 73
@@ -1391,12 +1389,8 @@ State 97
 
 State 98
 
-   41 Dec: VarDec ASSIGNOP Exp •
-   69 Exp: Exp • COMMA AssignmentExp
+   41 Dec: VarDec ASSIGNOP AssignmentExp •
 
-    COMMA  shift, and go to state 97
-
-    COMMA     [reduce using rule 41 (Dec)]
     $default  reduce using rule 41 (Dec)
 
 
